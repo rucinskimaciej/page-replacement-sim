@@ -1,4 +1,6 @@
-package sop.pageReplacement2.common;
+package sop.pageReplacement.common;
+
+import sop.pageReplacement.simulator.PageReplacementSimulator;
 
 import java.util.HashMap;
 import java.util.Map;

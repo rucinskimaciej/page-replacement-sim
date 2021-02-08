@@ -1,8 +1,8 @@
 package sop.pageReplacement;
 
 import org.junit.jupiter.api.Test;
-import sop.pageReplacement2.common.FIFO;
-import sop.pageReplacement2.common.PageReplacementSimulator;
+import sop.pageReplacement.simulator.PageReplacementSimulator;
+import sop.pageReplacement.simulator.fifo.FIFO;
 
 class FifoSimulatorTest {
 

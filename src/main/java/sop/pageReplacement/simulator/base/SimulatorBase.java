@@ -1,4 +1,8 @@
-package sop.pageReplacement2.common;
+package sop.pageReplacement.simulator.base;
+
+import sop.pageReplacement.common.Frame;
+import sop.pageReplacement.common.Statistics;
+import sop.pageReplacement.simulator.PageReplacementSimulator;
 
 import java.util.*;
 import java.util.stream.Collectors;

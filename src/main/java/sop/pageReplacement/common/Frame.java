@@ -1,56 +1,45 @@
 package sop.pageReplacement.common;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class Frame {
+    private Integer page;
+    private final int index;
 
-    private Integer time;
-    private final Map<Integer, Integer> history;
+    private final List<Integer> history;
 
-    public Frame() {
-        this.history = new LinkedHashMap<>();
-        time = 0;
-        this.addEmpty();
+    public Frame(int index) {
+        this.index = index;
+        history = new LinkedList<>();
     }
 
-    public void addEmpty() {
-        history.put(time++, null);
+    public Integer getPage() {
+        return page;
+    }
+    /**
+     *  Returns previous page
+     * */
+    public Integer setPage(Integer page) {
+        Integer lastPage = this.page;
+        this.page = page;
+        history.add(page);
+        return lastPage;
     }
 
-    public void addPage(Integer page) {
-        history.put(time++, page);
+    /**
+     *  Returns previous page
+     * */
+    public Integer repeatLastPage() {
+        history.add(page);
+        return page;
     }
 
-    Integer countRepetitionsOfLastElement() {
-        Integer last = getLastPage();
-        List<Integer> values = (List<Integer>) history.values();
-        for (int i = values.size() - 1; i >= 0; i--) {
-            if (last != (int) values.get(i)) return values.size() - i;
-        }
-        throw new NullPointerException("Sth went wrong - should not reach this point");
+    public int getIndex() {
+        return index;
     }
 
-    public Map<Integer, Integer> getHistory() {
-        return Collections.unmodifiableMap(history);
-    }
-
-    public Map<Integer, Integer> getLast() {
-        return Map.of(time, history.get(time));
-    }
-
-    public Integer getLastPage() {
-        return history.get(time);
-    }
-
-    public Integer getTime() {
-        return time;
-    }
-
-    public void addLast() {
-        Integer last = getLastPage();
-        history.put(time++, last);
+    public List<Integer> getHistory() {
+        return history;
     }
 }

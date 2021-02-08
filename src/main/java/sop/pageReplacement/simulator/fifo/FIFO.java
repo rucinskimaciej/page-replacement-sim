@@ -1,4 +1,7 @@
-package sop.pageReplacement2.common;
+package sop.pageReplacement.simulator.fifo;
+
+import sop.pageReplacement.common.Frame;
+import sop.pageReplacement.simulator.base.SimulatorBase;
 
 import java.util.*;
 
