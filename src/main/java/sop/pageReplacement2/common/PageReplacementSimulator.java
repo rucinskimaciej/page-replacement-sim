@@ -1,4 +1,4 @@
-package sop.pageReplacement;
+package sop.pageReplacement2.common;
 
 public interface PageReplacementSimulator {
 
