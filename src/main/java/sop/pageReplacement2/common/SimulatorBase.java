@@ -108,21 +108,24 @@ public abstract class SimulatorBase implements PageReplacementSimulator {
     protected abstract boolean replaceFrameWithAlgorithm();
 
     private void outputToTerminal() {
-        String separator = "-".repeat(pages.length * 4);
+
         IntStream.rangeClosed(1, pages.length).forEach(this::printRow);
-        System.out.println();
-        System.out.println(separator);
+        separator();
         for (int page : pages) {
             printRow(page);
         }
-        System.out.println();
-        System.out.println(separator);
+        separator();
         for (Frame frame : frames) {
             frame.getHistory().forEach(this::printRow);
             System.out.println();
         }
         System.out.println();
         printStats();
+    }
+
+    private void separator() {
+        String separator = "-".repeat(pages.length * 4);
+        System.out.println("\n" + separator);
     }
 
     private void printStats() {
