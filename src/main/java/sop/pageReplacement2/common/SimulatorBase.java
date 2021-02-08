@@ -59,19 +59,32 @@ public abstract class SimulatorBase implements PageReplacementSimulator {
 
     public void processAlgorithm() {
         boolean hit;
-        for (int i = 0; i < pages.length; i++) {
-            currentPage = pages[i];
-            if (frames.stream().anyMatch(frame -> frame.getPage() == null)) {
-                hit = replacePageInFrameAndRepeatOther(i);
-            }
-            else if (currentIsPresent()) {
+        for (int page : pages) {
+            currentPage = page;
+            if (currentIsPresent()) {
                 frames.forEach(Frame::repeatLastPage);
                 hit = true;
+            } else if (frames.stream().anyMatch(frame -> frame.getPage() == null)) {
+                hit = replaceFirstNullAndRepeatOther();
             } else {
                 hit = replaceFrameWithAlgorithm();
             }
             hits.add(hit);
         }
+    }
+
+    private boolean replaceFirstNullAndRepeatOther() {
+        Iterator<Frame> iterator = frames.iterator();
+        Frame candidate;
+        int frameIndexToReplace;
+        while (iterator.hasNext()) {
+            candidate = iterator.next();
+            if (candidate.getPage() == null) {
+                frameIndexToReplace = candidate.getIndex();
+                return replacePageInFrameAndRepeatOther(frameIndexToReplace);
+            }
+        }
+        throw new NullPointerException("Something went terribly wrong - you should not be here!");
     }
 
     /**
@@ -96,7 +109,6 @@ public abstract class SimulatorBase implements PageReplacementSimulator {
 
     private void outputToTerminal() {
         String separator = "-".repeat(pages.length * 4);
-        String underscoreSeparator = "_".repeat(pages.length * 4);
         IntStream.rangeClosed(1, pages.length).forEach(this::printRow);
         System.out.println();
         System.out.println(separator);
@@ -104,7 +116,7 @@ public abstract class SimulatorBase implements PageReplacementSimulator {
             printRow(page);
         }
         System.out.println();
-        System.out.println(underscoreSeparator);
+        System.out.println(separator);
         for (Frame frame : frames) {
             frame.getHistory().forEach(this::printRow);
             System.out.println();
