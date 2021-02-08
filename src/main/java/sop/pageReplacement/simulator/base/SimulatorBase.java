@@ -66,7 +66,7 @@ public abstract class SimulatorBase implements PageReplacementSimulator {
         for (int page : pages) {
             currentPage = page;
             if (currentIsPresent()) {
-                frames.forEach(Frame::repeatLastPage);
+                frames.forEach(frame -> frame.repeat(currentPage));
                 hit = true;
             } else if (frames.stream().anyMatch(frame -> frame.getPage() == null)) {
                 hit = replaceFirstNullAndRepeatOther();
@@ -98,10 +98,10 @@ public abstract class SimulatorBase implements PageReplacementSimulator {
         Frame frameToReplace = frames.stream()
                 .filter(frame -> frame.getIndex() == index)
                 .collect(Collectors.toList()).get(0);
-        Integer prevPage = frameToReplace.setPage(currentPage);
+        Integer prevPage = frameToReplace.replace(currentPage);
         frames.stream()
                 .filter(frame -> frame.getIndex() != index)
-                .forEach(Frame::repeatLastPage);
+                .forEach(frame -> frame.repeat(currentPage));
         return Integer.valueOf(currentPage).equals(prevPage);
     }
 
