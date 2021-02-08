@@ -4,7 +4,6 @@ import java.util.*;
 
 public class FIFO extends SimulatorBase {
 
-
     public FIFO(int numberOfFrames, int[] pages) {
         super(numberOfFrames, pages);
     }
