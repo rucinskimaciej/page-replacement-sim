@@ -7,7 +7,7 @@ import sop.pageReplacement.simulator.lru.LRU;
 
 class simulatorTest {
 
-    private final static int[] input = new int[]{1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5};
+    private final static int[] input = new int[]{5,1,6,2,7,5,4,8,5,3,6,3,8,1,8,5,2,1,8,6};
     private PageReplacementSimulator sim;
 
     @Test
@@ -18,7 +18,7 @@ class simulatorTest {
 
     @Test
     void lruTest() {
-        sim = new LRU(4, input);
+        sim = new LRU(3, input);
         sim.execute();
     }
 }
