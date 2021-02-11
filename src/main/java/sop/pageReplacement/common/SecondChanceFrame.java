@@ -21,4 +21,25 @@ public class SecondChanceFrame extends Frame {
     public void resetSecondChance() {
         secondChance = true;
     }
+
+    @Override
+    protected void addToHistory() {
+        String output = this.getPage() == null ? null : this.getPage().toString();
+        if (output != null) {
+            output += String.format(" (%d)", hasSecondChance() ? 1 : 0);
+        }
+        history.add(output);
+    }
+
+    @Override
+    public Integer replace(int page) {
+        if (!Integer.valueOf(page).equals(getPage())) resetSecondChance();
+        return super.replace(page);
+    }
+
+    @Override
+    public Integer repeat(int page) {
+        if (Integer.valueOf(page).equals(getPage())) resetSecondChance();
+        return super.repeat(page);
+    }
 }

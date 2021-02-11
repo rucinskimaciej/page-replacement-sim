@@ -41,10 +41,13 @@ public class FIFO extends SimulatorBase<Frame> {
 
     private Integer getLastPageRepeatsIn(Frame frame) {
         Integer cur = frame.getPage();
-        List<Integer> history = frame.getHistory();
+        List<String> history = frame.getHistory();
         int repeats = 0;
         for (int i = history.size() - 1; i >= 0; i--) {
-            if (cur == null || cur.equals(history.get(i))) repeats++;
+            String historicalValueString = history.get(i);
+            Integer value = historicalValueString == null ?
+                    null : Integer.parseInt(historicalValueString.split(" ")[0]);
+            if (cur == null || cur.equals(value)) repeats++;
         }
         return repeats;
     }

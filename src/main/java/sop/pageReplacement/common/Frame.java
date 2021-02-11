@@ -1,5 +1,7 @@
 package sop.pageReplacement.common;
 
+import sop.pageReplacement.simulator.secondChance.SecondChance;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,7 +10,7 @@ public class Frame {
     private final int index;
     private int recentlyUsed;
 
-    private final List<Integer> history;
+    protected final List<String> history;
 
     public Frame(int index) {
         this.index = index;
@@ -19,10 +21,14 @@ public class Frame {
         return page;
     }
 
+    protected void addToHistory() {
+        history.add(this.page == null ? null : this.page.toString());
+    }
+
     private Integer replace(Integer page, boolean repeat) {
         Integer lastPage = this.page;
         if (!repeat) this.page = page;
-        history.add(this.page);
+        addToHistory();
         checkRecentlyUsed(page);
         return lastPage;
     }
@@ -54,7 +60,7 @@ public class Frame {
         return index;
     }
 
-    public List<Integer> getHistory() {
+    public List<String> getHistory() {
         return history;
     }
 }

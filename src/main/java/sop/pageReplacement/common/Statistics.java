@@ -44,8 +44,11 @@ public class Statistics<F extends Frame> {
             frequency = new HashMap<>();
             for (Frame frame : simulator.getFrames()) {
                 frame.getHistory().forEach(page -> {
-                    if (page != null)
-                        frequency.merge(page, 1, Integer::sum);
+                    int pageInt;
+                    if (page != null) {
+                        pageInt = Integer.parseInt(page.split(" ")[0]);
+                        frequency.merge(pageInt, 1, Integer::sum);
+                    }
                 });
             }
         }

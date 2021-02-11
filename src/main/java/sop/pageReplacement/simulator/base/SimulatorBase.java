@@ -1,8 +1,10 @@
 package sop.pageReplacement.simulator.base;
 
 import sop.pageReplacement.common.Frame;
+import sop.pageReplacement.common.SecondChanceFrame;
 import sop.pageReplacement.common.Statistics;
 import sop.pageReplacement.simulator.PageReplacementSimulator;
+import sop.pageReplacement.simulator.secondChance.SecondChance;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -156,8 +158,18 @@ public abstract class SimulatorBase<F extends Frame> implements PageReplacementS
 
     private void printRow(Integer i) {
         String s = i == null ? "" : i.toString();
-        String format = String.format("%3s ", s);
-        System.out.print(format);
+        printRow(s);
+    }
+
+    protected void printRow(String s) {
+        printRow(s, 3);
+    }
+
+    protected void printRow(String s, int colWidth) {
+        s = s == null ? "" : s;
+        String format = "%" + colWidth + "s ";
+        String line = String.format(format, s);
+        System.out.print(line);
     }
 
     protected void outputToFile() {
