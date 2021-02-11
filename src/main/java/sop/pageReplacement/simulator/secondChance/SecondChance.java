@@ -44,65 +44,26 @@ public class SecondChance extends SimulatorBase<SecondChanceFrame> {
 
     @Override
     protected void replaceFrameWithAlgorithm() {
-        int fifoIndex = -1;
-
-        for (SecondChanceFrame fifoOrderedFrame : getFifoOrderedFrames()) {
-            if (fifoOrderedFrame.hasSecondChance()) {
-                try {
-                    fifoOrderedFrame.useSecondChance();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                fifoIndex = fifoOrderedFrame.getIndex();
-                break;
-            }
-        }
-
-        fifoIndex = fifoIndex >= 0 ? fifoIndex : getFifoFrame(frames).getIndex();
-
+        int fifoIndex = getFifoFrame().getIndex();
         replacePageInFrameAndRepeatOther(fifoIndex);
     }
 
-    private Set<SecondChanceFrame> getFifoOrderedFrames() {
-        Set<SecondChanceFrame> backup = new LinkedHashSet<>(frames);
-        Set<SecondChanceFrame> ordered = new LinkedHashSet<>();
-
-        while (!backup.isEmpty()) {
-            SecondChanceFrame fifo = getFifoFrame(backup);
-            backup.remove(fifo);
-            ordered.add(fifo);
-        }
-        return ordered;
-    }
-
-    private SecondChanceFrame getFifoFrame(Set<SecondChanceFrame> frames) {
+    private SecondChanceFrame getFifoFrame() {
         Map<SecondChanceFrame, Integer> lastPageRepeats = new HashMap<>();
-        frames.forEach(frame -> lastPageRepeats.put(frame,getLastPageRepeatsIn(frame)));
-        int max = lastPageRepeats.entrySet().stream()
-                .max(Map.Entry.comparingByValue()).orElseThrow().getValue();
-        return lastPageRepeats.entrySet().stream()
-                .filter(e -> Integer.valueOf(max).equals(e.getValue()))
-                .min(Comparator.comparingInt(e -> e.getKey().getIndex()))
-                .orElseThrow()
-                .getKey();
-    }
-
-    private Integer getLastPageRepeatsIn(SecondChanceFrame frame) {
-        Integer cur = frame.getPage();
-        List<String> history = frame.getHistory();
-        int repeats = 0;
-        for (int i = history.size() - 1; i >= 0; i--) {
-            String historicalValueString = history.get(i);
-            Integer value = historicalValueString == null ?
-                    null : Integer.parseInt(historicalValueString.split(" ")[0]);
-            if (cur == null || cur.equals(value)) repeats++;
+        frames.forEach(frame -> lastPageRepeats.put(frame,frame.getTimeInMemory()));
+        Set<SecondChanceFrame> fifoOrdered = orderFifo(lastPageRepeats);
+        for (SecondChanceFrame frame : fifoOrdered) {
+            try {
+                frame.useSecondChance();
+            } catch (Exception e) {
+                return frame;
+            }
         }
-        return repeats;
+        return fifoOrdered.iterator().next();
     }
 
     @Override
     protected void printRow(String s) {
-        printRow(s, 7);
+        printRow(s, 9);
     }
 }

@@ -4,7 +4,6 @@ import sop.pageReplacement.common.Frame;
 import sop.pageReplacement.common.SecondChanceFrame;
 import sop.pageReplacement.common.Statistics;
 import sop.pageReplacement.simulator.PageReplacementSimulator;
-import sop.pageReplacement.simulator.secondChance.SecondChance;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -135,7 +134,7 @@ public abstract class SimulatorBase<F extends Frame> implements PageReplacementS
     }
 
     private void separator() {
-        String separator = "-".repeat(pages.length * 4);
+        String separator = "--".repeat(pages.length * 4);
         System.out.println("\n" + separator);
     }
 
@@ -144,7 +143,8 @@ public abstract class SimulatorBase<F extends Frame> implements PageReplacementS
         System.out.printf(format, stats.getHits().getKey(), stats.getHits().getValue());
         System.out.printf(format, stats.getMisses().getKey(), stats.getMisses().getValue());
 
-        System.out.println("------------------\nFREQUENCY:");
+        System.out.println("------------------");
+        System.out.printf(format, "P", "FREQ:");
         for (Map.Entry<Integer, Integer> fq : getFrequency()) {
             System.out.printf(format, fq.getKey(), fq.getValue());
         }
@@ -167,9 +167,16 @@ public abstract class SimulatorBase<F extends Frame> implements PageReplacementS
 
     protected void printRow(String s, int colWidth) {
         s = s == null ? "" : s;
-        String format = "%" + colWidth + "s ";
+        String format = "%-" + colWidth + "s ";
         String line = String.format(format, s);
         System.out.print(line);
+    }
+
+    protected LinkedHashSet<F> orderFifo(Map<F, Integer> lastPageRepeats) {
+        return lastPageRepeats.entrySet().stream()
+                .sorted((es1, es2) -> es2.getValue() - es1.getValue())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     protected void outputToFile() {

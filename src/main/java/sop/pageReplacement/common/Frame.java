@@ -9,6 +9,7 @@ public class Frame {
     private Integer page;
     private final int index;
     private int recentlyUsed;
+    private int timeInMemory;
 
     protected final List<String> history;
 
@@ -37,6 +38,7 @@ public class Frame {
      *  Returns previous page
      * */
     public Integer replace(int page) {
+        timeInMemory = 1;
         return replace(page, false);
     }
 
@@ -44,6 +46,7 @@ public class Frame {
      *  Returns previous page
      * */
     public Integer repeat(int page) {
+        if (this.page != null) timeInMemory++;
         return replace(page, true);
     }
 
@@ -54,6 +57,10 @@ public class Frame {
 
     public int getRecentlyUsed() {
         return recentlyUsed;
+    }
+
+    public int getTimeInMemory() {
+        return timeInMemory;
     }
 
     public int getIndex() {
