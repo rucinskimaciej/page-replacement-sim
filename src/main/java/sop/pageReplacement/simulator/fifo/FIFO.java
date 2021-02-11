@@ -5,7 +5,7 @@ import sop.pageReplacement.simulator.base.SimulatorBase;
 
 import java.util.*;
 
-public class FIFO extends SimulatorBase {
+public class FIFO extends SimulatorBase<Frame> {
 
     public FIFO(int numberOfFrames, int[] pages) {
         super(numberOfFrames, pages);
@@ -16,9 +16,14 @@ public class FIFO extends SimulatorBase {
     }
 
     @Override
-    protected boolean replaceFrameWithAlgorithm() {
+    protected Frame newFrame(int i) {
+        return new Frame(i);
+    }
+
+    @Override
+    protected void replaceFrameWithAlgorithm() {
         int fifo = fifoIndex();
-        return replacePageInFrameAndRepeatOther(fifo);
+        replacePageInFrameAndRepeatOther(fifo);
     }
 
     private int fifoIndex() {

@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Optimal extends SimulatorBase {
+public class Optimal extends SimulatorBase<Frame> {
 
     public Optimal(int numberOfFrames, int[] pages) {
         super(numberOfFrames, pages);
@@ -17,10 +17,16 @@ public class Optimal extends SimulatorBase {
         super(numberOfFrames, pages);
     }
 
+
     @Override
-    protected boolean replaceFrameWithAlgorithm() {
+    protected Frame newFrame(int i) {
+        return new Frame(i);
+    }
+
+    @Override
+    protected void replaceFrameWithAlgorithm() {
         int frameIndex = findFrameIndexToReplace();
-        return replacePageInFrameAndRepeatOther(frameIndex);
+        replacePageInFrameAndRepeatOther(frameIndex);
     }
 
     private int findFrameIndexToReplace() {

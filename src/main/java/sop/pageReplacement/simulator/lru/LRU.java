@@ -5,7 +5,7 @@ import sop.pageReplacement.simulator.base.SimulatorBase;
 
 import java.util.Comparator;
 
-public class LRU extends SimulatorBase {
+public class LRU extends SimulatorBase<Frame> {
 
     public LRU(int numberOfFrames, int[] pages) {
         super(numberOfFrames, pages);
@@ -16,9 +16,14 @@ public class LRU extends SimulatorBase {
     }
 
     @Override
-    protected boolean replaceFrameWithAlgorithm() {
+    protected Frame newFrame(int i) {
+        return new Frame(i);
+    }
+
+    @Override
+    protected void replaceFrameWithAlgorithm() {
         Frame lru = frames.stream().max(Comparator.comparingInt(Frame::getRecentlyUsed)).orElseThrow();
         int lruIndex = lru.getIndex();
-        return replacePageInFrameAndRepeatOther(lruIndex);
+        replacePageInFrameAndRepeatOther(lruIndex);
     }
 }

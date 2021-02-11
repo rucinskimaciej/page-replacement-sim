@@ -8,9 +8,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public abstract class SimulatorBase implements PageReplacementSimulator {
+public abstract class SimulatorBase<F extends Frame> implements PageReplacementSimulator {
 
-    protected final Set<Frame> frames;
+    protected final Set<F> frames;
     protected final int[] pages;
     protected final List<Boolean> hits;
     protected int currentPage;
@@ -21,23 +21,25 @@ public abstract class SimulatorBase implements PageReplacementSimulator {
         this.pages = pages;
         this.frames = insert(numberOfFrames);
         this.hits = new LinkedList<>();
-        this.stats = new Statistics(this);
+        this.stats = new Statistics<>(this);
     }
 
     public SimulatorBase(int numberOfFrames, String pages) {
         this.frames = insert(numberOfFrames);
         this.pages = mapToIntArr(pages);
         this.hits = new LinkedList<>();
-        this.stats = new Statistics(this);
+        this.stats = new Statistics<>(this);
     }
 
-    private Set<Frame> insert(int numberOfFrames) {
-        Set<Frame> frames = new LinkedHashSet<>();
+    protected Set<F> insert(int numberOfFrames) {
+        Set<F> frames = new LinkedHashSet<>();
         for (int i = 0; i < numberOfFrames; i++) {
-            frames.add(new Frame(i));
+            frames.add(newFrame(i));
         }
         return frames;
     }
+
+    protected abstract F newFrame(int i);
 
     private int[] mapToIntArr(String pages) {
         return Arrays.stream(pages.split(" "))
@@ -73,15 +75,16 @@ public abstract class SimulatorBase implements PageReplacementSimulator {
             } else if (frames.stream().anyMatch(frame -> frame.getPage() == null)) {
                 hit = replaceFirstNullAndRepeatOther();
             } else {
-                hit = replaceFrameWithAlgorithm();
+                replaceFrameWithAlgorithm();
+                hit = false;
             }
             hits.add(hit);
         }
     }
 
     private boolean replaceFirstNullAndRepeatOther() {
-        Iterator<Frame> iterator = frames.iterator();
-        Frame candidate;
+        Iterator<F> iterator = frames.iterator();
+        F candidate;
         int frameIndexToReplace;
         while (iterator.hasNext()) {
             candidate = iterator.next();
@@ -97,7 +100,7 @@ public abstract class SimulatorBase implements PageReplacementSimulator {
      * Returns boolean for hit (true) or miss (false)
      * */
     protected boolean replacePageInFrameAndRepeatOther(int index) {
-        Frame frameToReplace = frames.stream()
+        F frameToReplace = frames.stream()
                 .filter(frame -> frame.getIndex() == index)
                 .collect(Collectors.toList()).get(0);
         Integer prevPage = frameToReplace.replace(currentPage);
@@ -111,7 +114,7 @@ public abstract class SimulatorBase implements PageReplacementSimulator {
         return frames.stream().anyMatch(frame -> Integer.valueOf(currentPage).equals(frame.getPage()));
     }
 
-    protected abstract boolean replaceFrameWithAlgorithm();
+    protected abstract void replaceFrameWithAlgorithm();
 
     private void outputToTerminal() {
 
@@ -121,7 +124,7 @@ public abstract class SimulatorBase implements PageReplacementSimulator {
             printRow(page);
         }
         separator();
-        for (Frame frame : frames) {
+        for (F frame : frames) {
             frame.getHistory().forEach(this::printRow);
             System.out.println();
         }
@@ -161,8 +164,7 @@ public abstract class SimulatorBase implements PageReplacementSimulator {
         // todo
     }
 
-    @Override
-    public Set<Frame> getFrames() {
+    public Set<F> getFrames() {
         return frames;
     }
 

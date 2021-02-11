@@ -9,5 +9,4 @@ public interface PageReplacementSimulator {
 
     void execute();
     List<Boolean> getHits();
-    Set<Frame> getFrames();
 }

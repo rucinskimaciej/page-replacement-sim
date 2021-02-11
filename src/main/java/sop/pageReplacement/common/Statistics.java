@@ -1,18 +1,18 @@
 package sop.pageReplacement.common;
 
-import sop.pageReplacement.simulator.PageReplacementSimulator;
+import sop.pageReplacement.simulator.base.SimulatorBase;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Statistics {
+public class Statistics<F extends Frame> {
 
-    private final PageReplacementSimulator simulator;
+    private final SimulatorBase<F> simulator;
     private final Map<String, Integer> stats;
     private Map<Integer, Integer> frequency;
 
-    public Statistics(PageReplacementSimulator simulator) {
+    public Statistics(SimulatorBase<F> simulator) {
         this.simulator = simulator;
         stats = new HashMap<>();
     }
