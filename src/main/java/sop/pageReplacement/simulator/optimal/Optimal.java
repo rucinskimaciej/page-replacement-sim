@@ -46,13 +46,13 @@ public class Optimal extends SimulatorBase {
 
     /**
      * Returns index of next occurrence equal to 'page'
-     * Returns '-1' if no next occurrence found
+     * Returns 'Integer.MAX_VALUE' if no next occurrence found
     * */
     private int getIndexOfNextUse(int page) {
         for (int i = currentIndex + 1; i < pages.length; i++) {
             if (pages[i] == page) return i;
         }
-        return -1;
+        return Integer.MAX_VALUE;
     }
 
 
