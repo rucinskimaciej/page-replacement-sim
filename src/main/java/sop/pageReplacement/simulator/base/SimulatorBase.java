@@ -15,6 +15,7 @@ public abstract class SimulatorBase implements PageReplacementSimulator {
     protected final List<Boolean> hits;
     protected int currentPage;
     protected final Statistics stats;
+    protected int currentIndex;
 
     public SimulatorBase(int numberOfFrames, int[] pages) {
         this.pages = pages;
@@ -63,8 +64,9 @@ public abstract class SimulatorBase implements PageReplacementSimulator {
 
     public void processAlgorithm() {
         boolean hit;
-        for (int page : pages) {
-            currentPage = page;
+        for (int i = 0; i < pages.length; i++) {
+            currentIndex = i;
+            currentPage = pages[i];
             if (currentIsPresent()) {
                 frames.forEach(frame -> frame.repeat(currentPage));
                 hit = true;
