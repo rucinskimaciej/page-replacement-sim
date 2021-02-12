@@ -172,11 +172,13 @@ public abstract class SimulatorBase<F extends Frame> implements PageReplacementS
         System.out.print(line);
     }
 
-    protected LinkedHashSet<F> orderFifo(Map<F, Integer> lastPageRepeats) {
+    protected Queue<F> orderFifo() {
+        Map<F, Integer> lastPageRepeats = new HashMap<>();
+        frames.forEach(frame -> lastPageRepeats.put(frame,frame.getTimeInMemory()));
         return lastPageRepeats.entrySet().stream()
                 .sorted((es1, es2) -> es2.getValue() - es1.getValue())
                 .map(Map.Entry::getKey)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     protected void outputToFile() {

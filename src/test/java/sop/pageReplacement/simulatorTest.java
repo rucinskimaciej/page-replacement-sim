@@ -21,19 +21,19 @@ class simulatorTest {
 
     @Test
     void fifoTest() {
-        sim = new FIFO(3, lectureInput);
+        sim = new FIFO(3, examInput);
         sim.execute();
     }
 
     @Test
     void lruTest() {
-        sim = new LRU(3, examInput);
+        sim = new LRU(4, examInput);
         sim.execute();
     }
 
     @Test
     void optimalTest() {
-        sim = new Optimal(3, examInput);
+        sim = new Optimal(4, examInput);
         sim.execute();
     }
 

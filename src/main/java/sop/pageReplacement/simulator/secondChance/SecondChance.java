@@ -1,5 +1,6 @@
 package sop.pageReplacement.simulator.secondChance;
 
+import sop.pageReplacement.common.Frame;
 import sop.pageReplacement.common.SecondChanceFrame;
 import sop.pageReplacement.simulator.base.SimulatorBase;
 
@@ -48,18 +49,41 @@ public class SecondChance extends SimulatorBase<SecondChanceFrame> {
         replacePageInFrameAndRepeatOther(fifoIndex);
     }
 
+    private SecondChanceFrame getFifo() {
+        Queue<SecondChanceFrame> fifoQueue = orderFifo();
+        SecondChanceFrame fifo = null;
+        do {
+            if (fifo != null) fifoQueue.offer(fifo);
+            fifo = fifoQueue.poll();
+        } while (fifo != null && fifo.hasSecondChance());
+        return fifo;
+    }
+
     private SecondChanceFrame getFifoFrame() {
         Map<SecondChanceFrame, Integer> lastPageRepeats = new HashMap<>();
         frames.forEach(frame -> lastPageRepeats.put(frame,frame.getTimeInMemory()));
-        Set<SecondChanceFrame> fifoOrdered = orderFifo(lastPageRepeats);
-        for (SecondChanceFrame frame : fifoOrdered) {
-            try {
-                frame.useSecondChance();
-            } catch (Exception e) {
-                return frame;
+        Queue<SecondChanceFrame> fifoOrdered = orderFifo();
+        SecondChanceFrame scFrame = null;
+        do {
+            if (scFrame != null) {
+                try {
+                    scFrame.useSecondChance();
+                } catch (Exception e) {
+                    return scFrame;
+                }
+                fifoOrdered.offer(scFrame);
             }
-        }
-        return fifoOrdered.iterator().next();
+            scFrame = fifoOrdered.poll();
+        } while (scFrame != null && scFrame.hasSecondChance());
+
+//        for (SecondChanceFrame frame : fifoOrdered) {
+//            try {
+//                frame.useSecondChance();
+//            } catch (Exception e) {
+//                return frame;
+//            }
+//        }
+        return scFrame;
     }
 
     @Override

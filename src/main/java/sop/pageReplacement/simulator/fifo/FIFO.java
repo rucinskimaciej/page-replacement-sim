@@ -3,8 +3,6 @@ package sop.pageReplacement.simulator.fifo;
 import sop.pageReplacement.common.Frame;
 import sop.pageReplacement.simulator.base.SimulatorBase;
 
-import java.util.*;
-
 public class FIFO extends SimulatorBase<Frame> {
 
     public FIFO(int numberOfFrames, int[] pages) {
@@ -27,9 +25,6 @@ public class FIFO extends SimulatorBase<Frame> {
     }
 
     private Frame getFifoFrame() {
-        Map<Frame, Integer> lastPageRepeats = new HashMap<>();
-        frames.forEach(frame -> lastPageRepeats.put(frame,frame.getTimeInMemory()));
-        Set<Frame> fifoOrdered = orderFifo(lastPageRepeats);
-        return fifoOrdered.iterator().next();
+        return orderFifo().poll();
     }
 }
