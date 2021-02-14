@@ -26,7 +26,7 @@ public class SecondChanceFrame extends Frame {
     protected void addToHistory() {
         String output = this.getPage() == null ? null : this.getPage().toString();
         if (output != null) {
-            output += String.format(" (%d)[%d]", hasSecondChance() ? 1 : 0, getTimeInMemory());
+            output += String.format(" (%d)[%d]", hasSecondChance() ? 1 : 0, getRecentlyUsed());
         }
         history.add(output);
     }

@@ -20,8 +20,10 @@ public class FIFO extends SimulatorBase<Frame> {
 
     @Override
     protected void replaceFrameWithAlgorithm() {
-        int fifo = getFifoFrame().getIndex();
-        replacePageInFrameAndRepeatOther(fifo);
+        Frame frame = fifo.poll();
+        int fifoIndex = frame.getIndex();
+        replacePageInFrameAndRepeatOther(fifoIndex);
+        fifo.offer(frame);
     }
 
     private Frame getFifoFrame() {

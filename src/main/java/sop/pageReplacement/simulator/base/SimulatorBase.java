@@ -11,6 +11,8 @@ import java.util.stream.IntStream;
 
 public abstract class SimulatorBase<F extends Frame> implements PageReplacementSimulator {
 
+
+    protected Queue<F> fifo;
     protected final Set<F> frames;
     protected final int[] pages;
     protected final List<Boolean> hits;
@@ -20,14 +22,16 @@ public abstract class SimulatorBase<F extends Frame> implements PageReplacementS
 
     public SimulatorBase(int numberOfFrames, int[] pages) {
         this.pages = pages;
+        this.fifo = new LinkedList<>();
         this.frames = insert(numberOfFrames);
         this.hits = new LinkedList<>();
         this.stats = new Statistics<>(this);
     }
 
     public SimulatorBase(int numberOfFrames, String pages) {
-        this.frames = insert(numberOfFrames);
         this.pages = mapToIntArr(pages);
+        this.fifo = new LinkedList<>();
+        this.frames = insert(numberOfFrames);
         this.hits = new LinkedList<>();
         this.stats = new Statistics<>(this);
     }
@@ -35,7 +39,9 @@ public abstract class SimulatorBase<F extends Frame> implements PageReplacementS
     protected Set<F> insert(int numberOfFrames) {
         Set<F> frames = new LinkedHashSet<>();
         for (int i = 0; i < numberOfFrames; i++) {
-            frames.add(newFrame(i));
+            F frame = newFrame(i);
+            frames.add(frame);
+            fifo.offer(frame);
         }
         return frames;
     }
@@ -175,6 +181,15 @@ public abstract class SimulatorBase<F extends Frame> implements PageReplacementS
     protected Queue<F> orderFifo() {
         Map<F, Integer> lastPageRepeats = new HashMap<>();
         frames.forEach(frame -> lastPageRepeats.put(frame,frame.getTimeInMemory()));
+        return lastPageRepeats.entrySet().stream()
+                .sorted((es1, es2) -> es2.getValue() - es1.getValue())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    protected Queue<F> orderLru() {
+        Map<F, Integer> lastPageRepeats = new HashMap<>();
+        frames.forEach(frame -> lastPageRepeats.put(frame,frame.getRecentlyUsed()));
         return lastPageRepeats.entrySet().stream()
                 .sorted((es1, es2) -> es2.getValue() - es1.getValue())
                 .map(Map.Entry::getKey)

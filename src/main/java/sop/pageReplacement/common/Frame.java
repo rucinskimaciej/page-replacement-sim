@@ -30,7 +30,6 @@ public class Frame {
         Integer lastPage = this.page;
         if (!repeat) this.page = page;
         addToHistory();
-        checkRecentlyUsed(page);
         return lastPage;
     }
 
@@ -39,6 +38,7 @@ public class Frame {
      * */
     public Integer replace(int page) {
         timeInMemory = 1;
+        recentlyUsed = 1;
         return replace(page, false);
     }
 
@@ -47,12 +47,11 @@ public class Frame {
      * */
     public Integer repeat(int page) {
         if (this.page != null) timeInMemory++;
+        if (this.page != null) {
+            if (this.page.equals(page)) recentlyUsed = 1;
+            else recentlyUsed++;
+        }
         return replace(page, true);
-    }
-
-    private void checkRecentlyUsed(int page) {
-        if (Integer.valueOf(page).equals(this.page)) recentlyUsed = 1;
-        else recentlyUsed++;
     }
 
     public int getRecentlyUsed() {
