@@ -12,7 +12,7 @@ class simulatorTest {
     private final static String examInput =
 
 
-"                         2)(5)(4)(3)(6)(5)(4)(3)(6)(8)(4)(3)(2)(1)(2)(6)(5)(2)(1)(8                                "
+"                         4)(3)(1)(5)(8)(3)(8)(4)(7)(8)(5)(3)(5)(4)(5)(2)(6)(7)(6)(5                                "
 
 
                     .replace(")(", " ").replace(",", " ").trim();
@@ -27,19 +27,19 @@ class simulatorTest {
 
     @Test
     void lruTest() {
-        sim = new LRU(4, examInput);
+        sim = new LRU(3, examInput);
         sim.execute();
     }
 
     @Test
     void optimalTest() {
-        sim = new Optimal(4, examInput);
+        sim = new Optimal(3, examInput);
         sim.execute();
     }
 
     @Test
     void secondChanceTest() {
-        sim = new SecondChance(4, examInput);
+        sim = new SecondChance(3, examInput);
         sim.execute();
     }
 }

@@ -1,7 +1,6 @@
 package sop.pageReplacement.simulator.base;
 
 import sop.pageReplacement.common.Frame;
-import sop.pageReplacement.common.SecondChanceFrame;
 import sop.pageReplacement.common.Statistics;
 import sop.pageReplacement.simulator.PageReplacementSimulator;
 
@@ -12,7 +11,7 @@ import java.util.stream.IntStream;
 public abstract class SimulatorBase<F extends Frame> implements PageReplacementSimulator {
 
 
-    protected Queue<F> fifo;
+    protected final Queue<F> fifo;
     protected final Set<F> frames;
     protected final int[] pages;
     protected final List<Boolean> hits;

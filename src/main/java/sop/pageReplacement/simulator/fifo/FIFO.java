@@ -25,8 +25,4 @@ public class FIFO extends SimulatorBase<Frame> {
         replacePageInFrameAndRepeatOther(fifoIndex);
         fifo.offer(frame);
     }
-
-    private Frame getFifoFrame() {
-        return orderFifo().poll();
-    }
 }
