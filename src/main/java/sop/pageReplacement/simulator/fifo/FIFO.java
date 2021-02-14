@@ -25,4 +25,9 @@ public class FIFO extends SimulatorBase<Frame> {
         replacePageInFrameAndRepeatOther(fifoIndex);
         fifo.offer(frame);
     }
+
+    @Override
+    public String getName() {
+        return "FIFO";
+    }
 }

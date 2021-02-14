@@ -26,4 +26,9 @@ public class LRU extends SimulatorBase<Frame> {
         int lruIndex = lru.getIndex();
         replacePageInFrameAndRepeatOther(lruIndex);
     }
+
+    @Override
+    public String getName() {
+        return "LRU";
+    }
 }

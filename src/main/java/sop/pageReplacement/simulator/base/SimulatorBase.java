@@ -4,6 +4,8 @@ import sop.pageReplacement.common.Frame;
 import sop.pageReplacement.common.Statistics;
 import sop.pageReplacement.simulator.PageReplacementSimulator;
 
+import java.io.*;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -58,6 +60,7 @@ public abstract class SimulatorBase<F extends Frame> implements PageReplacementS
     public void execute() {
         processAlgorithm();
         output("t");
+        output("f");
     }
 
     private void output(String output) {
@@ -123,7 +126,7 @@ public abstract class SimulatorBase<F extends Frame> implements PageReplacementS
     protected abstract void replaceFrameWithAlgorithm();
 
     private void outputToTerminal() {
-
+        System.out.printf(">>>>>>>>>>>   %s   <<<<<<<<<<%n", getName());
         IntStream.rangeClosed(1, pages.length).forEach(this::printRow);
         separator();
         for (int page : pages) {
@@ -136,6 +139,65 @@ public abstract class SimulatorBase<F extends Frame> implements PageReplacementS
         }
         System.out.println();
         printStats();
+    }
+
+    protected void outputToFile() {
+        String separator = "--".repeat(pages.length * 4);
+        String format = "%-3s";
+        String path = "src/main/resources/results/" + getName() + "_" + System.currentTimeMillis() + ".txt";
+        File file = new File(path);
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            bw.write(String.format(">>>>>>>>>>>   %s   <<<<<<<<<<", getName()));
+            bw.newLine();
+            StringBuilder sb = new StringBuilder();
+            IntStream.rangeClosed(1, pages.length).forEach(i -> sb.append(String.format(format, i)));
+            bw.write(sb.toString());
+            bw.newLine();
+            bw.write(separator);
+            bw.newLine();
+            StringBuilder sb2 = new StringBuilder();
+            Arrays.stream(pages).forEach(i -> sb2.append(String.format(format, i)));
+            bw.write(sb2.toString());
+            bw.newLine();
+            bw.write(separator);
+            bw.newLine();
+            StringBuilder history = new StringBuilder();
+            separator();
+            for (F frame : frames) {
+                frame.getHistory().forEach(h -> {
+                    if (h == null) h = " ";
+                    history.append(String.format(format, h));
+                });
+                history.append("\n");
+            }
+            history.append("\n");
+            bw.write(history.toString());
+
+            StringBuilder sbStats = new StringBuilder();
+            String statsFormat = "%s : %s%n";
+            String s = String.format(statsFormat, stats.getHits().getKey(), stats.getHits().getValue());
+            sbStats.append(s);
+            s = String.format(statsFormat, stats.getMisses().getKey(), stats.getMisses().getValue());
+            sbStats.append(s);
+            sbStats.append("------------------\n");
+            sbStats.append(String.format(statsFormat, "P", "FREQ"));
+
+            for (Map.Entry<Integer, Integer> fq : getFrequency()) {
+                sbStats.append(String.format(statsFormat, fq.getKey(), fq.getValue()));
+            }
+
+            bw.write(sbStats.toString());
+            bw.newLine();
+            bw.flush();
+            bw.close();
+
+
+        } catch (IOException e) {
+            System.err.print("COULD NOT WRITE FILE: ");
+            System.out.println(path);
+            file.delete();
+        }
     }
 
     private void separator() {
@@ -193,10 +255,6 @@ public abstract class SimulatorBase<F extends Frame> implements PageReplacementS
                 .sorted((es1, es2) -> es2.getValue() - es1.getValue())
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toCollection(LinkedList::new));
-    }
-
-    protected void outputToFile() {
-        // todo
     }
 
     public Set<F> getFrames() {

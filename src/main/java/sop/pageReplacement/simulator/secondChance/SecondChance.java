@@ -40,6 +40,11 @@ public class SecondChance extends SimulatorBase<SecondChanceFrame> {
         }
     }
 
+    @Override
+    public String getName() {
+        return "DRUGIEJ SZANSY";
+    }
+
 // todo IF DEBUGGING - this will justify the output
 //    @Override
 //    protected void printRow(String s) {

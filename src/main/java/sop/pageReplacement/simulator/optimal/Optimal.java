@@ -62,4 +62,8 @@ public class Optimal extends SimulatorBase<Frame> {
     }
 
 
+    @Override
+    public String getName() {
+        return "OPTYMALNY";
+    }
 }
